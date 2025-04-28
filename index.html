@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acervo de Plantas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>🌿 Alameda Plantas</h1>
+  <input type="text" id="pesquisa" placeholder="Digite o nome da planta..." oninput="filtrarPlantas()">
+  <div id="galeria"></div>
+
+  <script>
+    const URL_PLANILHA = "https://docs.google.com/spreadsheets/d/16f2AsMYgz0Zlf0uFzpPjaFgwo_Ei4BgUK5-ahKREghY/gviz/tq?tqx=out:json";
+
+    let dadosPlantas = [];
+
+    async function carregarPlantas() {
+      const resposta = await fetch(URL_PLANILHA);
+      const texto = await resposta.text();
+      const json = JSON.parse(texto.substring(47).slice(0, -2));
+      const linhas = json.table.rows;
+
+      dadosPlantas = linhas.map(linha => ({
+        nome: linha.c[0]?.v || "Sem nome",
+        idArquivo: linha.c[1]?.v || "",
+        tipo: (linha.c[2]?.v || "foto").toLowerCase()
+      }));
+
+      exibirPlantas(dadosPlantas);
+    }
+
+    function exibirPlantas(lista) {
+      const galeria = document.getElementById('galeria');
+      galeria.innerHTML = '';
+
+      lista.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'planta';
+
+        if (item.tipo === "foto") {
+          div.innerHTML = \`
+            <img src="https://drive.google.com/uc?export=view&id=\${item.idArquivo}" alt="\${item.nome}">
+            <p>\${item.nome}</p>
+          \`;
+        } else if (item.tipo === "vídeo" || item.tipo === "video") {
+          div.innerHTML = \`
+            <video controls width="250">
+              <source src="https://drive.google.com/uc?export=download&id=\${item.idArquivo}" type="video/mp4">
+              Seu navegador não suporta vídeo HTML5.
+            </video>
+            <p>\${item.nome}</p>
+          \`;
+        }
+
+        galeria.appendChild(div);
+      });
+    }
+
+    function filtrarPlantas() {
+      const termo = document.getElementById('pesquisa').value.toLowerCase();
+      const filtradas = dadosPlantas.filter(p =>
+        p.nome.toLowerCase().includes(termo)
+      );
+      exibirPlantas(filtradas);
+    }
+
+    carregarPlantas();
+  </script>
+</body>
+</html>

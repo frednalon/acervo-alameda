@@ -1,0 +1,46 @@
+
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #f3f3f3;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 2em;
+  color: #2e7d32;
+}
+
+#pesquisa {
+  width: 80%;
+  max-width: 400px;
+  padding: 10px;
+  margin: 20px 0;
+  font-size: 16px;
+}
+
+#galeria {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.planta {
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+  width: 250px;
+}
+
+.planta img, .planta video {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.planta p {
+  font-weight: bold;
+  margin-top: 10px;
+}
